@@ -1,0 +1,128 @@
+#!/bin/bash
+#
+# interact - Wrapper script for starting interactive jobs in a Torque
+#            batch system
+#
+# Authors:
+#	Mark Howison <mhowison@brown.edu>
+#
+# Copyright (c) 2011 Brown University. All rights reserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#Modify by JEC to fit gpaw
+
+QUEUE=batch
+CORES=1
+WALLTIME=0:40:00
+MEMORY=16g
+NODES=1
+FEATURE=e5-2600
+INPUT=$1
+
+usage() {
+	echo ""
+	echo "usage: gpaw-squeue [-n nodes] [-c cores] [-t walltime] [-m memory] [-f feature] [-q queue] [Input_file] [hostname]"
+	echo ""
+	echo "  Submit a gpaw parallel job in the '$QUEUE' queue." 
+	echo ""
+	echo "options:"
+
+	echo "  -n nodes     (default: $NODES)"
+	echo "  -c cores     (default: $CORES)"
+	echo "  -t walltime  as hh:mm:ss (default: $WALLTIME)"
+	echo "  -m memory    as #[k|m|g] (default: $MEMORY)"
+	echo "  -q queue     (default: $QUEUE)"
+        echo "  -f feature   (default e5-2600)"
+	echo "  -p email     e.g., John_Doe@brown.edu "
+	echo "  hostname     only run on this hostname (default: none, use any available node)"
+	echo ""
+	exit 0
+}
+
+while getopts "hn:c:t:m:f:q:p:" OPTION
+do
+	case $OPTION in
+		n )
+			NODES=$OPTARG
+			;;
+		c )
+			CORES=$OPTARG
+			;;
+		t )
+			WALLTIME=$OPTARG
+			;;
+		m )
+			MEMORY=$OPTARG
+			;;
+		f )
+			FEATURE=$OPTARG
+			;;
+		p )
+			EMAIL=$OPTARG
+			;;
+		q )
+			QUEUE=$OPTARG
+			;;
+		? )
+			usage
+			;;
+	esac
+done
+
+shift $((OPTIND-1))
+
+if [[ $# -gt 0 ]]
+then
+	NODE=$2
+	echo "Hostname: $NODE"
+fi
+
+echo "Cores:    $CORES"
+echo "Walltime: $WALLTIME"
+echo "Memory:   $MEMORY"
+echo "Queue:    $QUEUE"
+echo "Nodes:    $NODES"
+echo "Features: $FEATURE"
+echo "EMAIL:    $EMAIL"
+
+
+
+sbatch  <<EOF
+#!/bin/bash -l
+#SBATCH --job-name=gpaw
+#SBATCH --ntasks-per-node=$CORES
+#SBATCH --nodes=$NODES
+#SBATCH --mem=$MEMORY
+#SBATCH --partition=$QUEUE
+#SBATCH --time=$WALLTIME
+#SBATCH --constraint=$FEATURE
+#SBATCH --mail-type=end
+#SBATCH --mail-user=$EMAIL
+
+module load mvapich2/2.0rc1
+export PYTHONPATH=/users/ap31/usr/virtualenv/gpaw-dipole/lib/python2.7/site-packages:$PYTHONPATH
+export PATH=/users/ap31/usr/virtualenv/gpaw-dipole/bin:$PATH
+export LD_LIBRARY_PATH="/gpfs/runtime/opt/openblas/0.2.8/lib:/gpfs/runtime/opt/gpaw/1.1.0/src/libxc-install-3.0.0/lib":$LD_LIBRARY_PATH
+export GPAW_SETUP_PATH="/gpfs/runtime/opt/gpaw/1.1.0/gpaw-setups-0.9.20000"
+export PYTHONPATH=/users/ap31/usr/svn/ase/ase:$PYTHONPATH
+
+export OPENBLAS_NUM_THREADS=1
+
+echo $PYTHONPATH
+
+module list
+#mpirun -np 8 gpaw-python $1
+mpiexec gpaw-python $1
+EOF
