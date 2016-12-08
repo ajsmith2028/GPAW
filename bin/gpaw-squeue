@@ -112,11 +112,7 @@ sbatch  <<EOF
 #SBATCH --mail-user=$EMAIL
 
 module load mvapich2/2.0rc1
-export PYTHONPATH=/users/ap31/usr/virtualenv/gpaw-dipole/lib/python2.7/site-packages:$PYTHONPATH
-export PATH=/users/ap31/usr/virtualenv/gpaw-dipole/bin:$PATH
-export LD_LIBRARY_PATH="/gpfs/runtime/opt/openblas/0.2.8/lib:/gpfs/runtime/opt/gpaw/1.1.0/src/libxc-install-3.0.0/lib":$LD_LIBRARY_PATH
-export GPAW_SETUP_PATH="/gpfs/runtime/opt/gpaw/1.1.0/gpaw-setups-0.9.20000"
-export PYTHONPATH=/users/ap31/usr/svn/ase/ase:$PYTHONPATH
+loadgpawdeveloper
 
 export OPENBLAS_NUM_THREADS=1
 
