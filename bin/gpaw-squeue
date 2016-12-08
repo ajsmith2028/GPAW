@@ -112,7 +112,6 @@ sbatch  <<EOF
 #SBATCH --mail-user=$EMAIL
 
 module load mvapich2/2.0rc1
-loadgpawdeveloper
 
 export OPENBLAS_NUM_THREADS=1
 
