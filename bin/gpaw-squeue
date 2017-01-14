@@ -95,7 +95,16 @@ echo "Memory:   $MEMORY"
 echo "Queue:    $QUEUE"
 echo "Nodes:    $NODES"
 echo "Features: $FEATURE"
-echo "EMAIL:    $EMAIL"
+echo "Email:    $EMAIL"
+
+if [[ "$QUEUE" -eq debug ]]
+	then
+		ACCOUNTLINE="#SBATCH --account=default"
+	else
+		ACCOUNTLINE=" "
+fi
+
+echo "Accountline: $ACCOUNTLINE"
 
 
 
@@ -110,6 +119,7 @@ sbatch  <<EOF
 #SBATCH --constraint=$FEATURE
 #SBATCH --mail-type=end
 #SBATCH --mail-user=$EMAIL
+$ACCOUNTLINE
 
 module load mvapich2/2.0rc1
 loadgpawdeveloper
