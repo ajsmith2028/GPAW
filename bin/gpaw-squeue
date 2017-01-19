@@ -97,7 +97,7 @@ echo "Nodes:    $NODES"
 echo "Features: $FEATURE"
 echo "Email:    $EMAIL"
 
-if [[ "$QUEUE" -eq debug ]]
+if [[ "$QUEUE" == debug ]]
 	then
 		ACCOUNTLINE="#SBATCH --account=default"
 	else
