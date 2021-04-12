@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Submit a GPAW job to the debug queue.
+
+# Defaults.
+CORES=24
+NODES=1
+WALLTIME=50:00:00
+MEMORY_PER_CPU=4g
+QUEUE=batch
+
+usage() {
+  echo ""
+  echo "usage: gpaw-submit [-c cores] [-t walltime] [-m memory] input_file"
+  echo ""
+  echo " Submit a parallel job in the queue."
+  echo ""
+  echo "Options:"
+  echo " -n nodes [default: $NODES]"
+  echo " -c cores per node [default: $CORES]"
+  echo " -t walltime, as hh:mm:ss (default: $WALLTIME)"
+  echo " -m memory per cpu, as #[k|m|g] (default: $MEMORY_PER_CPU)"
+  echo " -q batch (default: $QUEUE)"
+  echo ""
+  exit 0
+}
+
+while getopts "hn:c:t:m:q:" OPTION; do
+  case $OPTION in
+   h )
+      usage
+      ;;
+   n )
+      NODES=$OPTARG
+      ;;
+   c )
+      CORES=$OPTARG
+      ;;
+   t )
+      WALLTIME=$OPTARG
+      ;;
+   m )
+      MEMORY_PER_CPU=$OPTARG
+      ;;
+   q )
+      QUEUE=$OPTARG
+      ;;
+ esac
+done
+
+shift $((OPTIND-1))
+
+echo "Nodes:  $NODES"
+echo "Cores per node:  $CORES"
+echo "Walltime:  $WALLTIME"
+echo "Memory per cpu:  $MEMORY_PER_CPU"
+echo "Queue:  $QUEUE"
+
+
+PROCESSES=$(($CORES * $NODES))
+
+sbatch <<EOF
+#!/bin/bash
+#SBATCH --ntasks-per-node=$CORES
+#SBATCH --nodes=$NODES
+#SBATCH --mem-per-cpu=$MEMORY_PER_CPU
+#SBATCH --partition=$QUEUE
+#SBATCH --time=$WALLTIME
+#SBATCH --account=ap31-condo
+#SBATCH -e errors.out
+
+export OPENBLAS_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+srun --mpi=pmix -n $PROCESSES python3 $1
+EOF
