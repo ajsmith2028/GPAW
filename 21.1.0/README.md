@@ -214,3 +214,8 @@ Then you should be able to submit jobs as normal, like
 loadgpawdeveloper # you only need to run this once per session
 gpaw-debug-submit -c 4 -t 0:15:00 run.py
 ```
+
+CCV Installation Notes
+======================
+
+For archival purposes, the file CCVREADME is one created by the CCV which contains the installation procedure that the CCV used in installing this.

@@ -1,0 +1,116 @@
+# TICKET OR REQUESTOR/DEPENDENCE INFORMATION (ticket number, etc)
+Andrew Peterson
+Ticket: 206076
+
+# SOURCE OF CODE (URL, REPO, etc.)
+https://wiki.fysik.dtu.dk/gpaw/releasenotes.html#version-20-10-0
+
+# MODULES (i.e., OUTPUT OF 'module list' COMMAND)
+[login005]: module list
+java/8u111                           intel/2020.2                         
+python/3.9.0                         mpi/openmpi_4.0.5_gcc_10.2_slurm20   
+gcc/10.2
+
+# INSTALLATION STEPS
+cd /gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20
+#INSTALL DEPENDENCIES
+mkdir depends
+cd depends
+# update paths
+export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
+export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
+export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
+#
+mkdir src
+cd src
+# libxc (note: known issue with gpaw and libxc-5.0.0, using latest libxc-4.x.x instead)
+wget http://www.tddft.org/programs/libxc/down.php?file=4.3.4/libxc-4.3.4.tar.gz
+tar xvf down.php?file=4.3.4%2Flibxc-4.3.4.tar.gz
+cd libxc-4.3.4
+CC=gcc FC=gfortran ./configure --enable-shared \
+     --disable-fortran \
+     --prefix=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends
+make -j 8
+make check
+make install
+# fftw
+cd /gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/src
+wget http://fftw.org/fftw-3.3.8.tar.gz
+tar xvf fftw-3.3.8.tar.gz
+cd fftw-3.3.8
+# edit configure file, replacing "-no-gcc" with "-gcc-sys". This is necessary due to a known issue with Intel icc v19.1.2 and fftw
+CC=gcc MPICC=mpicc F77=gfortran ./configure --with-pic \
+     --enable-shared --disable-static \
+     --enable-sse2 --enable-avx2 --enable-threads \
+     --enable-openmp --enable-mpi \
+     --prefix=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends 
+make -j 8
+make check
+make install
+# pfft (dependency for libvdwxc) - Can't seem to get this to build
+#cd /gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends/src
+#wget http://flash.uchicago.edu/~dubey/pfft/pfft.tar.gz
+#tar xvf pfft.tar.gz
+#cd PFFT
+#CC=mpicc FC=mpifort F77=mpifort CFLAGS="-O3 -mavx2" FCFLAGS="-O3 -maxv2" FFLAGS="-O3 -maxv2" ./configure --prefix=/gpfs/runtime/opt/gpaw/20.10_hpcx_2.7.0_intel_2020.2_slurm20/gpaw.venv/depends --with-fftw=/gpfs/runtime/opt/gpaw/20.10_hpcx_2.7.0_intel_2020.2_slurm20/gpaw.venv/depends 
+#cd src
+#make -j 8
+
+# libvdwxc
+#cd /gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends/src
+#wget https://launchpad.net/libvdwxc/stable/0.4.0/+download/libvdwxc-0.4.0.tar.gz
+#tar xvf libvdwxc-0.4.0.tar.gz
+#cd libvdwxc-0.4.0
+#mkdir build
+#cd build
+#CC=gcc FC=gfortan MPICC=mpicc MPIFC=mpifort \
+#     ../configure --enable-shared --enable-static \ 
+#     --without-pfft \
+#     --with-fftw3=/gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends \
+#     --prefix=/gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends
+#CC=gcc FC=gfortan \
+#     ../configure --enable-shared --enable-static \
+#     --without-pfft --with-mpi \
+#     --with-fftw3=/gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends \
+#     --prefix=/gpfs/runtime/opt/gpaw/21.1.0_hpcx_2.7.0_gcc_10.2_slurm20/depends
+#make -j 8
+# ase
+cd /gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20
+virtualenv gpaw.venv
+source ./gpaw.venv/bin/activate
+#prerequisites
+python -m pip install --upgrade pip
+pip install numpy scipy matplotlib flask pytest pytest-xdist
+#
+pip install ase
+ase test
+FAILED constraints/test_fixinternals.py::test_combos - assert 1.9895196601282805e-12 < 1e-12
+ERROR calculator/vasp/test_vasp_calculator.py::test_bad_pbc[pbc2]
+ERROR calculator/vasp/test_vasp_calculator.py::test_check_atoms
+ERROR calculator/vasp/test_vasp_calculator.py::test_vasp_no_cell
+ERROR calculator/vasp/test_vasp_calculator.py::test_vasp_name
+ERROR calculator/vasp/test_vasp_calculator.py::test_not_atoms[None]
+ERROR calculator/vasp/test_vasp_calculator.py::test_vasp_get_calculator
+ERROR calculator/vasp/test_vasp_calculator.py::test_not_atoms[a_string]
+ERROR calculator/vasp/test_vasp_calculator.py::test_not_atoms[bad_atoms2]
+ERROR calculator/vasp/test_vasp_calculator.py::test_bad_pbc[pbc0]
+ERROR calculator/vasp/test_vasp_calculator.py::test_bad_pbc[pbc1]
+============= 1 failed, 1472 passed, 266 skipped, 3 xfailed, 10 errors in 79.82s (0:01:19) =============
+# install gpaw
+git clone https://gitlab.com/gpaw/gpaw.git -b 21.1.0
+cd gpaw
+cp siteconfig_example.py siteconfig.py
+# edit siteconfig.py to build with mkl, libxc, fftw
+# note: encounter errors when including openmp in the build (parallel test fails)
+# so commenting that out for now (new to version 21?)
+pip install .
+# test installation
+gpaw info   # checks that everything is in the correct location
+gpaw install-data /gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/gpaw.venv # install PAW data sets
+export GPAW_SETUP_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_gcc_10.2_slurm20/gpaw.venv/gpaw-setups-0.9.20000
+gpaw test       # serial test
+srun -N 1 -n 4 -p batch -t 30 --mpi=pmix gpaw -P 4 test	# parallel test
+
+# OTHER NOTES
+
