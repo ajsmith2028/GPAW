@@ -47,18 +47,21 @@ Custom installation
 If you'd like the latest development version; for example to use or test new features, or better to have your own copy to hack on, these instructions should work.
 You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/devel/developer_installation.html).
 
-OLD UPDATE ME!!!!!
-------------------
 
-Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `load_gpaw`. We'll assume you already have ASE installed, which is located at `/path/to/my/ase`. These instructions are based off of how Paul Hall installed GPAW 20.10 on the CCV. Note you will need to be on login005 or login006, which have the new slurm, if you are doing this before January 5, 2021. After that the new slurm will be the default.
+Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadcustomgpaw`.
+We'll assume you already have ASE installed, which is located at `/path/to/my/ase`.
+As noted above, if you want to be careful, your ASE version should be ASE-3.21.0.
+These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
 
 First load the necessary modules:
 
 ```bash
-module load mpi/hpcx_2.7.0_intel_2020.2_slurm20 intel/2020.2 python/3.9.0
+module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.0
 ```
 
-I'll assume you are installing GPAW in `~/usr/installs`. Create a virtual python environment within that and install needed packages. (Note that whatever you pick for `GPAWPATH` needs to be the *permanent* installation location; you can't easily move it later.)
+I'll assume you are installing GPAW in `~/usr/installs`.
+You will create a virtual python environment (`venv`) within that and install the needed packages.
+(Note that whatever you pick for `GPAWPATH` needs to be the *permanent* installation location; you can't easily move it later.)
 
 ```bash
 GPAWPATH=$HOME/usr/installs/gpaw
@@ -75,18 +78,37 @@ python3 -m pip install flake8
 python3 -m pip install pytest
 python3 -m pip install pytest-xdist
 ```
+
 Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below. Note the last few lines point to libxc4.2.3, because there is a bug in version 5.0.0.
 
 ```bash
-export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/20.10.0_hpcx_2.7.0_intel_2020.2_slurm20/gpaw.venv/depends/include:$C_INCLUDE_PATH
-export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/20.10.0_hpcx_2.7.0_intel_2020.2_slurm20/gpaw.venv/depends/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/20.10.0_hpcx_2.7.0_intel_2020.2_slurm20/gpaw.venv/depends/lib:$LD_LIBRARY_PATH
+export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
+export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
+export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
+```
+
+FIXME:
+------
+
+In previous version, we also were pointing to our local libxc.
+I think they have only installed 4.x now so we don't need to do this.
+But will come back to this if needed!
+Also, in previous version we were *not* setting `PATH` here; might want to re-examine.
+Old libxc environment varialbes are below.
+
+```bash
 export LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LD_LIBRARY_PATH
 export C_INCLUDE_PATH=/users/ap31/data/software/libxc-4.2.3/include:$C_INCLUDE_PATH
 ```
 
-Add ASE to your python path, if it's not there already:
+END FIXME
+---------
+
+Add ASE to your python path, if it's not there already.
+This assumes you already have ASE installed at `/path/to/my/ase`.
+(As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.0, but this is usually quite forgiving.)
 
 ```bash
 ASEPATH=/path/to/my/ase
@@ -96,22 +118,40 @@ export PYTHONPATH="$ASEPATH:$PYTHONPATH"
 complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
 ```
 
-We've stored the configuration files and submission scripts that are unique to Brown in the "brown-gpaw" repository. Clone this so you can get these files, using one of the two modes below.
+We've stored the configuration files and submission scripts that are unique to Brown in the "brown-gpaw" repository.
+(Presumably, you are reading this file from within this repository!)
+Clone this so you can get these files, using one of the two modes below.
 
 ```bash
 git clone git@bitbucket.org:andrewpeterson/brown-gpaw.git
 #git clone https://bitbucket.org/andrewpeterson/brown-gpaw.git
 ```
 
-Download GPAW into a folder which we'll call source. Here we are getting the developer version with `git`, but you can also download a numbered version with `wget`. (Also, try the https version of git if this doesn't work.) Also copy our own version of `siteconfig.py` to this directory. *Note:* If you are planning on working on a merge request, make sure to clone your own version of gpaw! E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
+Download GPAW into a local folder, which we'll call `source`.
+Choose one of the methods below, depending on if you want the latest development version, the exact stable 21.1.0 version, or your own development version.
+(You could alternatively download a numbered version with `wget`.)
+Also copy our own version of `siteconfig.py` to this directory.
+*Note:* If you are planning on working on a merge request, make sure to clone your own version of gpaw!
+E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
 
 ```bash
 mkdir source
 cd source
-git clone git@gitlab.com:gpaw/gpaw.git
+git clone https://gitlab.com/gpaw/gpaw.git  # Latest development version
+#git clone -b 21.1.0 https://gitlab.com/gpaw/gpaw.git  # Exact 21.1.0 version
+#git clone git@gitlab.com:andrew_peterson/gpaw.git  # Your own development version
 cd gpaw
-cp ../../brown-gpaw/2020-10/siteconfig.py .
+cp ../../brown-gpaw/21.1.0/siteconfig.py .
 ```
+
+FIXME
+-----
+
+It appears that the siteconfig.py has the link to libxc shut off both statically and dynamically, if I compare this to the previous version.
+I wonder if this needs to be fixed?
+
+END FIXME
+---------
 
 Cross your fingers, and install with
 
@@ -138,9 +178,16 @@ If you are doing something fancy, you may want to run the complete test suite, w
 cd source/gpaw
 pytest -v
 # Or better, submit it as a job to the queue as:
-cp ../../brown-gpaw/2020-10/run-gpaw-tests.py .
+cp ../../brown-gpaw/21.1.0/run-gpaw-tests.py .
 sbatch run-gpaw-tests.py
 ```
+
+
+OLD UPDATE ME!!!!!
+------------------
+
+
+
 
 If all looks good, you now have a functional copy. Now you should make a command to load it whenever you want to run a job. Add the following to your `.bashrc` (making sure your ASE path is right):
 
