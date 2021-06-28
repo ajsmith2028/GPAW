@@ -4,42 +4,8 @@ Installation instructions
 CCV module version
 ------------------
 
-If you are just looking for the standard installation of GPAW, version 21.1.0, then you can use the module installed on the CCV.
-You'll need to load a few other libraries and set some environment variables in addition to the modules available on the CCV.
-It's simplest to define a bash macro for this.
-You can put the following in your `~/.bashrc` file:
-
-```bash
-loadgpaw21_1(){
-ASEPATH=~/path/to/my/ase
-module load gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20
-module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.0
-GPAWPATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/gpaw.venv
-source $GPAWPATH/bin/activate
-export PATH="$ASEPATH/tools:$PATH"
-export PATH="$ASEPATH/bin:$PATH"
-export PYTHONPATH="$ASEPATH:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/bin/python3 $ASEPATH/ase/cli/complete.py" ase
-export C_INCLUDE_PATH=$GPAWPATH/depends/include:$C_INCLUDE_PATH
-export LIBRARY_PATH=$GPAWPATH/depends/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$GPAWPATH/depends/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LD_LIBRARY_PATH
-export C_INCLUDE_PATH=/users/ap31/data/software/libxc-4.2.3/include:$C_INCLUDE_PATH
-}
-```
-
-Here we are assuming you have your own ASE installed at `~/path/to/my/ase`.
-(The official ASE release that accompanies this GPAW version is ASE-3.21.0, if you want to be careful.)
-
-You can use the scripts `gpaw-submit` and `gpaw-debug-submit` to start your jobs, for example like
-
-```bash
-gpaw-submit -n 1 -c 24 run.py
-```
-
-where `run.py` is the name of the script you would like to run.
-You can store `gpaw-submit` and `gpaw-debug-submit` wherever you store your executables.
+As of this writing (2021-06-28), the last CCV module version was 21.1.0.
+Therefore, if you'd like to use versionn 21.6.0 or newer, you can just follow the custom installation instructions below.
 
 Custom installation
 -------------------
@@ -50,8 +16,10 @@ You should also have a look at the official instructions on the [GPAW website](h
 
 Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadcustomgpaw`.
 We'll assume you already have ASE installed, which is located at `/path/to/my/ase`.
-As noted above, if you want to be careful, your ASE version should be ASE-3.21.0.
+As noted above, if you want to be careful, your ASE version should be ASE-3.21.1.
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
+Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 21.6.0.
+These instructions are virtually identical to those of 21.6.0, but version numbers have been updated, hopefully in all places.
 
 First load the necessary modules:
 
@@ -79,7 +47,8 @@ python3 -m pip install pytest
 python3 -m pip install pytest-xdist
 ```
 
-Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below. Note the last few lines point to libxc4.2.3, because there is a bug in version 5.0.0.
+Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below.
+Note that there is a bug in libxc version 5.0.0, so this uses a 4.x version.
 
 ```bash
 export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
@@ -88,27 +57,9 @@ export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slur
 export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
 ```
 
-FIXME:
-------
-
-In previous version, we also were pointing to our local libxc.
-I think they have only installed 4.x now so we don't need to do this.
-But will come back to this if needed!
-Also, in previous version we were *not* setting `PATH` here; might want to re-examine.
-Old libxc environment varialbes are below.
-
-```bash
-export LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LD_LIBRARY_PATH
-export C_INCLUDE_PATH=/users/ap31/data/software/libxc-4.2.3/include:$C_INCLUDE_PATH
-```
-
-END FIXME
----------
-
 Add ASE to your python path, if it's not there already.
 This assumes you already have ASE installed at `/path/to/my/ase`.
-(As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.0, but this is usually quite forgiving.)
+(As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.1, but this is usually quite forgiving.)
 
 ```bash
 ASEPATH=/path/to/my/ase
@@ -128,8 +79,7 @@ git clone git@bitbucket.org:andrewpeterson/brown-gpaw.git
 ```
 
 Download GPAW into a local folder, which we'll call `source`.
-Choose one of the methods below, depending on if you want the latest development version, the exact stable 21.1.0 version, or your own development version.
-(You could alternatively download a numbered version with `wget`.)
+Choose one of the methods below, depending on if you want the latest development version, the exact stable 21.6.0 version, or your own development version.
 Also copy our own version of `siteconfig.py` to this directory.
 *Note:* If you are planning on working on a merge request, make sure to clone your own version of gpaw!
 E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
@@ -138,20 +88,11 @@ E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
 mkdir source
 cd source
 git clone https://gitlab.com/gpaw/gpaw.git  # Latest development version
-#git clone -b 21.1.0 https://gitlab.com/gpaw/gpaw.git  # Exact 21.1.0 version
+#git clone -b 21.6.0 https://gitlab.com/gpaw/gpaw.git  # Exact 21.6.0 version
 #git clone git@gitlab.com:andrew_peterson/gpaw.git  # Your own development version
 cd gpaw
-cp ../../brown-gpaw/21.1.0/siteconfig.py .
+cp ../../brown-gpaw/21.6.0/siteconfig.py .
 ```
-
-FIXME
------
-
-It appears that the siteconfig.py has the link to libxc shut off both statically and dynamically, if I compare this to the previous version.
-I wonder if this needs to be fixed?
-
-END FIXME
----------
 
 Cross your fingers, and install with
 
@@ -159,7 +100,7 @@ Cross your fingers, and install with
 python3 -m pip install --editable .
 ```
 
-(If you are developing GPAW: The `--editable` flag means that the installation will point to the git source files, so you don't have to re-install every time you change something in python. If you are installing a permanent version, you can leave this flag off.)
+(If you are developing GPAW: The `--editable` flag means that the installation will point to the git source files, so you don't have to re-install every time you change something in python. If you are installing a permanent version, you can leave this flag off. It doesn't really matter in that case.)
 
 Check that the installation exists, install the PAW setups, and test:
 
@@ -178,10 +119,13 @@ If you are doing something fancy, you may want to run the complete test suite, w
 cd source/gpaw
 pytest -v
 # Or better, submit it as a job to the queue as:
-cp ../../brown-gpaw/21.1.0/run-gpaw-tests.py .
+cp ../../brown-gpaw/21.6.0/run-gpaw-tests.py .
 sbatch run-gpaw-tests.py
 ```
-If all looks good, you now have a functional copy. Now you should make a command to load it whenever you want to run a job. Add the following to your `.bashrc` (making sure your ASE path is right):
+
+If all looks good, you now have a functional copy.
+Now you should make a command to load it whenever you want to run a job.
+Add the following to your `.bashrc` (making sure your ASE path is right):
 
 ```bash
 loadgpawdeveloper(){
@@ -204,8 +148,8 @@ You will also need submit files that you use to submit your python scripts.
 You can copy them into your bin directory as
 
 ```bash
-cp $GPAWPATH/brown-gpaw/21.1.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
-cp $GPAWPATH/brown-gpaw/21.1.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
+cp $GPAWPATH/brown-gpaw/21.6.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
+cp $GPAWPATH/brown-gpaw/21.6.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
 ```
 
 Then you should be able to submit jobs as normal, like

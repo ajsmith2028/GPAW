@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Submit a GPAW job to the debug queue.
+
+# Defaults.
+CORES=4
+NODES=1
+WALLTIME=00:30:00
+MEMORY=16g
+
+usage() {
+  echo ""
+  echo "usage: gpaw-debug-submit [-c cores] [-t walltime] [-m memory] input_file"
+  echo ""
+  echo " Submit a parallel job in the debug queue."
+  echo ""
+  echo "Options:"
+  echo " -c cores [default: $CORES]"
+  echo " -t walltime, as hh:mm:ss (default: $WALLTIME)"
+  echo " -m memory per node (default: $MEMORY)"
+  echo ""
+  exit 0
+}
+
+while getopts "hc:t:m:" OPTION; do
+  case $OPTION in
+   h )
+      usage
+      ;;
+   c )
+      CORES=$OPTARG
+      ;;
+   t )
+      WALLTIME=$OPTARG
+      ;;
+   m )
+      MEMORY=$OPTARG
+      ;;
+ esac
+done
+
+shift $((OPTIND-1))
+
+echo "Cores:  $CORES"
+echo "Walltime: $WALLTIME"
+echo "Memory: $MEMORY"
+
+
+PROCESSES=$(($CORES * $NODES))
+
+sbatch <<EOF
+#!/bin/bash
+#SBATCH --ntasks-per-node=$CORES
+#SBATCH --nodes=$NODES
+#SBATCH --mem=$MEMORY
+#SBATCH --partition=debug
+#SBATCH --time=$WALLTIME
+
+mpiexec -n $PROCESSES python3 $1
+EOF
