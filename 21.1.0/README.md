@@ -88,24 +88,6 @@ export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slur
 export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
 ```
 
-FIXME:
-------
-
-In previous version, we also were pointing to our local libxc.
-I think they have only installed 4.x now so we don't need to do this.
-But will come back to this if needed!
-Also, in previous version we were *not* setting `PATH` here; might want to re-examine.
-Old libxc environment varialbes are below.
-
-```bash
-export LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/users/ap31/data/software/libxc-4.2.3/lib:$LD_LIBRARY_PATH
-export C_INCLUDE_PATH=/users/ap31/data/software/libxc-4.2.3/include:$C_INCLUDE_PATH
-```
-
-END FIXME
----------
-
 Add ASE to your python path, if it's not there already.
 This assumes you already have ASE installed at `/path/to/my/ase`.
 (As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.0, but this is usually quite forgiving.)
@@ -149,6 +131,7 @@ FIXME
 
 It appears that the siteconfig.py has the link to libxc shut off both statically and dynamically, if I compare this to the previous version.
 I wonder if this needs to be fixed?
+It seems to work fine without this, but I emailed CCV to check. (2021-06-28)
 
 END FIXME
 ---------
