@@ -40,3 +40,9 @@ gpaw-submit -n 1 -c 24 run.py
 
 where `run.py` is the name of the script you would like to run.
 You can store `gpaw-submit` and `gpaw-debug-submit` wherever you store your executables.
+
+Custom installation
+-------------------
+
+If you'd like the latest development version; for example to use or test new features, or better to have your own copy to hack on, these instructions should work.
+You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/install.html).
