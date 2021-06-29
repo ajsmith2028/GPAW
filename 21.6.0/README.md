@@ -16,10 +16,10 @@ You should also have a look at the official instructions on the [GPAW website](h
 
 Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadgpawdeveloper`.
 We'll assume you already have ASE installed, which is located at `/path/to/my/ase`.
-As noted above, if you want to be careful, your ASE version should be ASE-3.21.1.
+(If you want to be careful, your ASE version should be ASE-3.21.1 to match GPAW version 21.6.0.)
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
 Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 21.6.0.
-These instructions are virtually identical to those of 21.6.0, but version numbers have been updated, hopefully in all places.
+These instructions are virtually identical to those of 21.1.0, just with version numbers updated.
 
 First load the necessary modules:
 
@@ -28,7 +28,7 @@ module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.
 ```
 
 I'll assume you are installing GPAW in `~/usr/installs`.
-You will create a virtual python environment (`venv`) within that and install the needed packages.
+You will create a python virtual environment (`venv`) within that directory and install the needed python packages.
 (Note that whatever you pick for `GPAWPATH` needs to be the *permanent* installation location; you can't easily move it later.)
 
 ```bash
@@ -89,7 +89,7 @@ mkdir source
 cd source
 git clone https://gitlab.com/gpaw/gpaw.git  # Latest development version
 #git clone -b 21.6.0 https://gitlab.com/gpaw/gpaw.git  # Exact 21.6.0 version
-#git clone git@gitlab.com:andrew_peterson/gpaw.git  # Your own development version
+#git clone git@gitlab.com:andrew_peterson/gpaw.git  # E.g., your own development version
 cd gpaw
 cp ../../brown-gpaw/21.6.0/siteconfig.py .
 ```
