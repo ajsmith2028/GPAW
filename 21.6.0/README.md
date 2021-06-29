@@ -42,9 +42,12 @@ python3 -m pip install numpy
 python3 -m pip install scipy
 python3 -m pip install matplotlib
 python3 -m pip install ipython
-python3 -m pip install flake8
-python3 -m pip install pytest
-python3 -m pip install pytest-xdist
+# Below are optional, mostly for those doing development.
+python3 -m pip install flake8  # for code style / bug checking
+python3 -m pip install pytest  # for unit tests
+python3 -m pip install pytest-xdist  # for unit tests
+python3 -m pip install sphinx  # for documentation building
+python3 -m pip install sphinx-rtd-theme  # for documentation building
 ```
 
 Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below.
