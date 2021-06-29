@@ -126,15 +126,15 @@ cd gpaw
 cp ../../brown-gpaw/21.1.0/siteconfig.py .
 ```
 
-FIXME
------
+---
+**FIXME**
 
 It appears that the siteconfig.py has the link to libxc shut off both statically and dynamically, if I compare this to the previous version.
 I wonder if this needs to be fixed?
-It seems to work fine without this, but I emailed CCV to check. (2021-06-28)
+For now, don't worry about this because it seems to work fine without this.
+However, I emailed CCV to check. (2021-06-28)
 
-END FIXME
----------
+---
 
 Cross your fingers, and install with
 
