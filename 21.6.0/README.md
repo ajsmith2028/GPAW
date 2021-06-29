@@ -14,7 +14,7 @@ If you'd like the latest development version; for example to use or test new fea
 You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/devel/developer_installation.html).
 
 
-Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadcustomgpaw`.
+Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadgpawdeveloper`.
 We'll assume you already have ASE installed, which is located at `/path/to/my/ase`.
 As noted above, if you want to be careful, your ASE version should be ASE-3.21.1.
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
