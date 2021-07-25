@@ -167,3 +167,38 @@ CCV Installation Notes
 
 For archival purposes, the file CCVREADME is one created by the CCV which contains the installation procedure that the CCV used in installing this.
 Note that this file is contained in the 20.1.0 folder, as this version uses the identical CCV install files.
+
+AGTS: Big Tests and Documentation Figures
+=========================================
+
+GPAW uses the "Advanced GPAW Testing System" (AGTS) to run especially long tests and to make figures for the documentation that are compute-intensive.
+This is basically a queueing / job-management system through `myqueue`, a side package of GPAW.
+So you will need to first install myqueue and get it configured for the CCV.
+
+Here we will assume you have done all the steps above and have created a `loadgpawdeveloper` command.
+First, load this (to activate your virtual environment), then install `myqueue` with pip:
+
+```bash
+loadgpawdeveloper
+python3 -m pip install myqueue
+```
+
+Next you will need a `config.py` file for our system at Brown.
+Note the example we have in this repository assumes you are a member of the `ap31` group; if not, change this line as appropriate.
+(You can also delete this line and will just submit to the default queue.)
+
+```bash
+cp $GPAWPATH/brown-gpaw/21.6.0/config.py ~/.myqueue/
+# edit the file above as appropriate!
+```
+
+*Hack:* Myqueue does not seem to inherit the system environment in the same manner as normal job submissions does, and we did not figure out an elegant way to pass the system environment variables through.
+So the workaround is to temporarily add `loadgpawdeveloper` to your `.bashrc` file; this will make sure that GPAW is always accessible to all logged-in sessions.
+You only need this while the AGTS jobs are running, you can remove it later.
+Do this, and you can submit the whole test suite, for example, by
+
+```bash
+cd $GPAWPATH/source/gpaw
+mq workflow -p agts.py .
+mq list  # see what's happening
+```
