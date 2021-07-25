@@ -171,6 +171,8 @@ Note that this file is contained in the 20.1.0 folder, as this version uses the 
 AGTS: Big Tests and Documentation Figures
 =========================================
 
+(Don't worry about this section unless you know you need AGTS! Most people don't.)
+
 GPAW uses the "Advanced GPAW Testing System" (AGTS) to run especially long tests and to make figures for the documentation that are compute-intensive.
 This is basically a queueing / job-management system through `myqueue`, a side package of GPAW.
 So you will need to first install myqueue and get it configured for the CCV.
