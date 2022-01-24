@@ -181,8 +181,8 @@ You will also need submit files that you use to submit your python scripts.
 You can copy them into your bin directory as
 
 ```bash
-cp $GPAWPATH/brown-gpaw/21.6.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
-cp $GPAWPATH/brown-gpaw/21.6.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
+cp $GPAWPATH/brown-gpaw/22.1.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
+cp $GPAWPATH/brown-gpaw/22.1.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
 ```
 
 Then you should be able to submit jobs as normal, like
