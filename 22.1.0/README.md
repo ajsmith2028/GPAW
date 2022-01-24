@@ -112,7 +112,7 @@ git clone git@bitbucket.org:andrewpeterson/brown-gpaw.git
 ```
 
 Download GPAW into a local folder, which we'll call `source`.
-Choose one of the methods below, depending on if you want the latest development version, the exact stable 21.6.0 version, or your own development version.
+Choose one of the methods below, depending on if you want the latest development version, the exact stable 22.1.0 version, or your own development version.
 Also copy our own version of `siteconfig.py` to this directory.
 *Note:* If you are planning on working on a merge request, make sure to clone your own version of gpaw!
 E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
@@ -124,7 +124,7 @@ git clone https://gitlab.com/gpaw/gpaw.git  # Latest development version
 #git clone -b 22.1.0 https://gitlab.com/gpaw/gpaw.git  # Exact 22.1.0 version
 #git clone git@gitlab.com:andrew_peterson/gpaw.git  # E.g., your own development version
 cd gpaw
-cp ../../brown-gpaw/21.6.0/siteconfig.py .
+cp ../../brown-gpaw/22.1.0/siteconfig.py .
 ```
 
 Cross your fingers, and install with
@@ -152,7 +152,7 @@ If you are doing something fancy, you may want to run the complete test suite, w
 cd source/gpaw
 pytest -v
 # Or better, submit it as a job to the queue as:
-cp ../../brown-gpaw/21.6.0/run-gpaw-tests.py .
+cp ../../brown-gpaw/22.1.0/run-gpaw-tests.py .
 sbatch run-gpaw-tests.py
 ```
 
