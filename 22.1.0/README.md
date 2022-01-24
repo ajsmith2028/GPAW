@@ -189,7 +189,8 @@ Then you should be able to submit jobs as normal, like
 
 ```bash
 loadgpawdeveloper # you only need to run this once per session
-gpaw-debug-submit -c 4 -t 0:15:00 run.py
+#gpaw-debug-submit -c 4 -t 0:15:00 run.py  # debug job
+gpaw-submit -n 1 -c 24 -t 50:00:00 run.py
 ```
 
 CCV Installation Notes
