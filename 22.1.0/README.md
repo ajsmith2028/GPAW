@@ -36,7 +36,11 @@ loadase(){
 ASEPATH=$HOME/usr/installs/ase
 export PYTHONPATH=$PYTHONPATH:$ASEPATH/ase
 export PATH=$PATH:$ASEPATH/bin
+}
 ```
+
+And when you want to load ase in the future, you just type `loadase` at the command line.
+Note that you may not yet have numpy installed, but we'll install that later.
 
 
 Back to GPAW install
@@ -117,7 +121,7 @@ E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
 mkdir source
 cd source
 git clone https://gitlab.com/gpaw/gpaw.git  # Latest development version
-#git clone -b 21.6.0 https://gitlab.com/gpaw/gpaw.git  # Exact 21.6.0 version
+#git clone -b 22.1.0 https://gitlab.com/gpaw/gpaw.git  # Exact 22.1.0 version
 #git clone git@gitlab.com:andrew_peterson/gpaw.git  # E.g., your own development version
 cd gpaw
 cp ../../brown-gpaw/21.6.0/siteconfig.py .
