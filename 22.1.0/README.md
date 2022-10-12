@@ -14,38 +14,51 @@ If you'd like to install your own version of GPAW 22.1.0 or the latest developme
 You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/devel/developer_installation.html).
 
 Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadgpawdeveloper`.
-We'll assume you already have ASE installed, which is located at `/path/to/my/ase`.
-(If you want to be careful, your ASE version should be ASE-3.22.1 to match GPAW version 22.1.0. If you are using the development branch of GPAW, then you probably want the development version.)
+This approach shouldn't put hidden files all over your system, so you should be able to un-install later, if you choose, by just removing the directory with all of the GPAW files.
 
 Aside: If you need ASE
 ----------------------
 
-If you don't yet have ASE installed, try:
+We'll assume you already have ASE installed, which is located at `$HOME/usr/installs/ase`.
+(If you want to be careful, your ASE version should be ASE-3.22.1 to match GPAW version 22.1.0. If you are using the development branch of GPAW, then you probably want the development version of ASE.)
+
+If you don't yet have ASE installed, you can do something like below, which will give you a standalone version of ASE that you can use without GPAW.
+If you only ever plan to use ASE with GPAW, you can skip the parts below the indicated lines, as these dependencies will also be installed for GPAW.
 
 ```bash
 ASEPATH=$HOME/usr/installs/ase
 mkdir -p $ASEPATH
 cd $ASEPATH
-git clone -b 3.22.1 https://gitlab.com/ase/ase.git
+git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
+#git clone https://gitlab.com/ase/ase.git  # for development version
+# You can skip below if you won't ever use ASE without GPAW.
+module load python/3.9.0
+python3 -m venv ase-venv
+source ase-venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install numpy
+python3 -m pip install scipy
+python3 -m pip install matplotlib
 ```
 
-Let's create a command to load ase in your .bashrc. Edit `.bashrc` to contain the function
+If you want to be able to use ASE without GPAW, create a command to load ASE in your .bashrc.
+Edit `.bashrc` to contain the function
 
 ```bash
 loadase(){
 ASEPATH=$HOME/usr/installs/ase
 export PYTHONPATH=$PYTHONPATH:$ASEPATH/ase
 export PATH=$PATH:$ASEPATH/bin
+module load python/3.9.0
+source ase-venv/bin/activate
 }
 ```
 
-And when you want to load ase in the future, you just type `loadase` at the command line.
-Note that you may not yet have numpy installed, but we'll install that later.
-
+And when you want to load ASE (without GPAW) in the future, you just type `loadase` at the command line.
+When you want ASE+GPAW, you'll be typing `loadgpaw`, as described below.
 
 Back to GPAW install
 --------------------
-
 
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
 Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 21.6.0.
@@ -71,8 +84,8 @@ python3 -m pip install --upgrade pip
 python3 -m pip install numpy
 python3 -m pip install scipy
 python3 -m pip install matplotlib
-python3 -m pip install ipython
 # Below are optional, mostly for those doing development.
+python3 -m pip install ipython  # for interactive python shell
 python3 -m pip install flake8  # for code style / bug checking
 python3 -m pip install pytest  # for unit tests
 python3 -m pip install pytest-xdist  # for unit tests
@@ -91,11 +104,11 @@ export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends
 ```
 
 Add ASE to your python path, if it's not there already.
-This assumes you already have ASE installed at `/path/to/my/ase`.
+This assumes you already have ASE installed at `$HOME/usr/installs/ase`.
 (As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.1, but this is usually quite forgiving.)
 
 ```bash
-ASEPATH=/path/to/my/ase
+ASEPATH=$HOME/usr/installs/ase
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH:$PYTHONPATH"
