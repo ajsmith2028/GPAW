@@ -34,7 +34,7 @@ git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
 # You can skip below if you won't ever use ASE without GPAW.
 module load python/3.9.0
 python3 -m venv ase-venv
-source ase-venv/bin/activate
+source $ASEPATH/ase-venv/bin/activate
 python3 -m pip install --upgrade pip
 python3 -m pip install numpy
 python3 -m pip install scipy
