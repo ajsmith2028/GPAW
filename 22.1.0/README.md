@@ -51,6 +51,7 @@ export PYTHONPATH=$PYTHONPATH:$ASEPATH/ase
 export PATH=$PATH:$ASEPATH/bin
 module load python/3.9.0
 source ase-venv/bin/activate
+complete -o default -C "$ASEPATH/ase-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
 }
 ```
 
