@@ -112,7 +112,7 @@ This assumes you already have ASE installed at `$HOME/usr/installs/ase`.
 ASEPATH=$HOME/usr/installs/ase
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
-export PYTHONPATH="$ASEPATH:$PYTHONPATH"
+export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
 complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
 ```
 
