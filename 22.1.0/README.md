@@ -48,7 +48,7 @@ Edit `.bashrc` to contain the function
 loadase(){
 ASEPATH=$HOME/usr/installs/ase
 export PYTHONPATH=$PYTHONPATH:$ASEPATH/ase
-export PATH=$PATH:$ASEPATH/bin
+export PATH=$PATH:$ASEPATH/ase/bin
 module load python/3.9.0
 source ase-venv/bin/activate
 complete -o default -C "$ASEPATH/ase-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
@@ -113,7 +113,7 @@ ASEPATH=$HOME/usr/installs/ase
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
+complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 ```
 
 We've stored the configuration files and submission scripts that are unique to Brown in the "brown-gpaw" repository.
@@ -182,12 +182,14 @@ module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.
 source $GPAWPATH/gpaw-venv/bin/activate
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
-export PYTHONPATH="$ASEPATH:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
+export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
+complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
 export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
 export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
+# Uncomment the next line if you chose not to register your setups.
+#export GPAW_SETUP_PATH=$GPAWPATH/gpaw-setups-0.9.20000
 }
 ```
 
