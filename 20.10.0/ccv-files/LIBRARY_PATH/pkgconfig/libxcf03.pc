@@ -1,0 +1,12 @@
+prefix=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libxcf03
+Description: Fortran 2003 interface for library of exchange and correlation functionals to be used in DFT codes
+Requires:
+Requires.private: libxc = 4.3.4
+Version: 4.3.4
+Libs: -L${libdir} -lxcf03
+Cflags: -I${includedir}

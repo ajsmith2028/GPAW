@@ -96,6 +96,7 @@ python3 -m pip install sphinx-rtd-theme  # for documentation building
 
 Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below.
 Note that there is a bug in libxc version 5.0.0, so this uses a 4.x version.
+For archival purposes, the contents of these four directories can be found in this repository (20.1.0/ccv-files).
 
 ```bash
 export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
