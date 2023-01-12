@@ -19,6 +19,7 @@ source /gpfs/data/ap31/software/2023/source_me
 
 Now (after logging back in again), you can load GPAW 22.8.0 with `pgroup-load-gpaw-22.08.0`.
 You can submit GPAW jobs with `gpaw-submit` and `gpaw-debug-submit`.
+(You don't need to follow any further instructions below.)
 
 Custom installation
 -------------------
