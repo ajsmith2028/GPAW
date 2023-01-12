@@ -62,13 +62,13 @@ Back to GPAW install
 --------------------
 
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
-Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 21.6.0.
+Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 22.8.0.
 These instructions are virtually identical to those of 21.1.0, just with version numbers updated.
 
 First load the necessary modules:
 
 ```bash
-module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.0
+module load mpi/openmpi_4.0.7_gcc_10.2_slurm22 gcc/10.2 intel/2020.2 python/3.9.0
 ```
 
 I'll assume you are installing GPAW in `~/usr/installs`.
@@ -129,7 +129,7 @@ Download GPAW into a local folder, which we'll call `source`.
 Choose one of the methods below, depending on if you want the latest development version, the exact stable 22.8.0 version, or your own development version.
 Also copy our own version of `siteconfig.py` to this directory.
 *Note:* If you are planning on working on a merge request, make sure to clone your own version of gpaw!
-E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`.
+E.g., `git clone git@gitlab.com:andrew_peterson/gpaw.git`, and make sure your own repository is correctly updated to the version you want.
 
 ```bash
 mkdir source
