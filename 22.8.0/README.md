@@ -179,7 +179,7 @@ Add the following to your `.bashrc` (making sure your ASE path is right):
 loadgpawdeveloper(){
 ASEPATH=/path/to/my/ase
 GPAWPATH=$HOME/usr/installs/gpaw
-module load mpi/openmpi_4.0.5_gcc_10.2_slurm20 gcc/10.2 intel/2020.2 python/3.9.0
+module load mpi/openmpi_4.0.7_gcc_10.2_slurm22 gcc/10.2 intel/2020.2 python/3.9.0
 source $GPAWPATH/gpaw-venv/bin/activate
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
