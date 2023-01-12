@@ -7,6 +7,19 @@ CCV module version
 As of this writing (2022-01-21), the last CCV module version was 21.1.0.
 Therefore, if you'd like to use version 22.1.0 or newer, you can just follow the custom installation instructions below.
 
+Pre-installed Peterson group version
+------------------------------------
+
+If you have read-access to the Peterson group's shared software directory (/gpfs/data/ap31/software), then you should be able to run a pre-installed version of GPAW 22.8.0 by adding the line below to your `.modules` file:
+
+```bash
+# Group software installations.
+source /gpfs/data/ap31/software/2023/source_me
+```
+
+Now (after logging back in again), you can load GPAW 22.8.0 with `pgroup-load-gpaw-22.08.0`.
+You can submit GPAW jobs with `gpaw-submit` and `gpaw-debug-submit`.
+
 Custom installation
 -------------------
 
