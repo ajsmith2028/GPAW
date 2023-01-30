@@ -59,6 +59,12 @@ echo "Queue:  $QUEUE"
 
 PROCESSES=$(($CORES * $NODES))
 
+# Below lines are needed for Brown's OOD only.
+# Hopefully they don't cause bugs on the standard login nodes.
+unset SLURM_MEM_PER_NODE
+unset SLURM_EXPORT_ENV
+
+
 sbatch <<EOF
 #!/bin/bash
 #SBATCH --ntasks-per-node=$CORES
