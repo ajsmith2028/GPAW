@@ -72,6 +72,13 @@ complete -o default -C "$ASEPATH/ase-venv/bin/python3 $ASEPATH/ase/cli/complete.
 And when you want to load ASE (without GPAW) in the future, you just type `loadase` at the command line.
 When you want ASE+GPAW, you'll be typing `loadgpaw`, as described below.
 
+Before returning to the GPAW install, deactivate the ASE virtual environment with the below command.
+(Or log out, then back in.)
+
+```bash
+deactivate
+```
+
 Back to GPAW install
 --------------------
 
