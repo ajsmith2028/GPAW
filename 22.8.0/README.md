@@ -84,7 +84,6 @@ Back to GPAW install
 
 These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
 Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 22.8.0.
-These instructions are virtually identical to those of 21.1.0, just with version numbers updated.
 
 First load the necessary modules:
 
