@@ -24,7 +24,7 @@ You can submit GPAW jobs with `gpaw-submit` and `gpaw-debug-submit`.
 Custom installation
 -------------------
 
-If you'd like to install your own version of GPAW 22.1.0 or the latest development version; for example to use or test new features, or better to have your own copy to hack on, these instructions should work.
+If you'd like to install your own version of GPAW 22.8.0 or the latest development version; for example to use or test new features, or better to have your own copy to hack on, these instructions should work.
 You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/devel/developer_installation.html).
 
 Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadgpawdeveloper`.
