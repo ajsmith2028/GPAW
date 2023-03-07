@@ -56,5 +56,5 @@ sbatch <<EOF
 #SBATCH --partition=debug
 #SBATCH --time=$WALLTIME
 
-mpiexec -n $PROCESSES python3 $1
+mpiexec -n $PROCESSES gpaw python $1
 EOF
