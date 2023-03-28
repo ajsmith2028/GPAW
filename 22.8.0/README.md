@@ -129,7 +129,8 @@ cd gpaw
 cp ../../brown-gpaw/22.8.0/siteconfig.py .
 ```
 
-Important: if you have installed somewhere other than what we suggest here, you will need to update the libvdwxc portion of siteconfig.py to correctly point to your libvdwxc installation before proceeding.
+*Important:* if you have installed somewhere other than what we suggest here, you will need to update the libvdwxc portion of siteconfig.py to correctly point to your libvdwxc installation before proceeding.
+See line 112.
 (That is, make it match $INSTALLPATH.)
 
 Cross your fingers, and install with
