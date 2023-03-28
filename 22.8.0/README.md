@@ -34,7 +34,7 @@ This approach shouldn't put hidden files all over your system, so you should be 
 Let's first create that directory; you can place it somewhere else if you choose by modifying `$INSTALLPATH`:
 
 ```bash
-INSTALLPATH=$HOME/installs  # Feel free to re-name; must be absolute path.
+INSTALLPATH=$HOME/installs/gpaw-22.8  # Feel free to re-name; must be absolute path.
 mkdir -p $INSTALLPATH
 cd $INSTALLPATH
 ```
@@ -73,9 +73,7 @@ We'll re-load this virtual environment every time we want to run a GPAW job with
 
 
 ```bash
-GPAWPATH=$INSTALLPATH/gpaw
-mkdir -p $GPAWPATH
-cd $GPAWPATH
+cd $INSTALLPATH
 python3 -m venv gpaw-venv
 source gpaw-venv/bin/activate
 python3 -m pip install --upgrade pip
