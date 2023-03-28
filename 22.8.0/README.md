@@ -100,7 +100,7 @@ git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
+complete -o default -C "$INSTALLPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 ```
 
 We've stored the configuration files and submission scripts that are unique to Brown in the "brown-gpaw" repository.
