@@ -144,7 +144,7 @@ python3 -m pip install --editable .
 Check that the installation exists, install the PAW setups, and test:
 
 ```bash
-cd $GPAWPATH
+cd $INSTALLPATH
 gpaw info  # Checks where stuff is installed.
 gpaw install-data .  # Installs the setups. Probably say 'y' to register the path.
 gpaw info  # Make sure the new setup directory shows up.
@@ -168,20 +168,20 @@ Add the following to your `.bashrc` (making sure your ASE path is right):
 
 ```bash
 loadgpawdeveloper(){
-ASEPATH=/path/to/my/ase
-GPAWPATH=$HOME/usr/installs/gpaw
+INSTALLPATH=$HOME/installs/gpaw-22.8  # Update if necessary.
+ASEPATH=$INSTALLPATH/ase
 module load mpi/openmpi_4.0.7_gcc_10.2_slurm22 gcc/10.2 intel/2020.2 python/3.9.0
-source $GPAWPATH/gpaw-venv/bin/activate
+source $INSTALLPATH/gpaw-venv/bin/activate
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
+complete -o default -C "$INSTALLPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
 export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
 export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
 # Uncomment the next line if you chose not to register your setups.
-#export GPAW_SETUP_PATH=$GPAWPATH/gpaw-setups-0.9.20000
+export GPAW_SETUP_PATH=$INSTALLPATH/gpaw-setups-0.9.20000
 }
 ```
 
@@ -189,8 +189,8 @@ You will also need submit files that you use to submit your python scripts.
 You can copy them into your bin directory as
 
 ```bash
-cp $GPAWPATH/brown-gpaw/22.8.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
-cp $GPAWPATH/brown-gpaw/22.8.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
+cp $INSTALLPATH/brown-gpaw/22.8.0/gpaw-debug-submit $INSTALLPATH/gpaw-venv/bin/
+cp $INSTALLPATH/brown-gpaw/22.8.0/gpaw-submit $INSTALLPATH/gpaw-venv/bin/
 ```
 
 Then you should be able to submit jobs as normal, like
