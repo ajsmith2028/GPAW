@@ -15,23 +15,27 @@ mkdir -p $INSTALLPATH
 cd $INSTALLPATH
 
 # Install libvdwxc.
+mkdir -p $INSTALLPATH/libvdwxc-source
+cd $INSTALLPATH/libvdwxc-source
 wget https://launchpad.net/libvdwxc/stable/0.4.0/+download/libvdwxc-0.4.0.tar.gz
 tar -xzvf libvdwxc-0.4.0.tar.gz
-rm -xzvf libvdwxc-0.4.0.tar.gz
-
+rm libvdwxc-0.4.0.tar.gz
 cd libvdwxc-0.4.0
 mkdir local-build
 cd local-build
-../configure --with-mpi --prefix="$HOME/installs/VDW"
+../configure --with-mpi --prefix="$INSTALLPATH/libvdwxc"
+make -j4   # Run make using 4 processors
+make check
+make install
 
 # Install ASE.
-ASEPATH=$INSTALLPATH:ase
+ASEPATH=$INSTALLPATH/ase
 mkdir -p $ASEPATH
 cd $ASEPATH
 git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
 
 # Install GPAW's virtual environment and python packages.
-GPAWPATH=$INSTALLDIR/gpaw
+GPAWPATH=$INSTALLPATH/gpaw
 mkdir -p $GPAWPATH
 cd $GPAWPATH
 python3 -m venv gpaw-venv
