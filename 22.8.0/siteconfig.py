@@ -107,7 +107,7 @@ if 0:
 
 
 # libvdwxc:
-if 0:
+if 1:
     libvdwxc = True
     path = '/home/user/libvdwxc'
     extra_link_args += ['-Wl,-rpath=%s/lib' % path]
