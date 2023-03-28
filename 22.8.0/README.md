@@ -110,6 +110,7 @@ We've stored the configuration files and submission scripts that are unique to B
 Clone this so you can get these files, using one of the two modes below.
 
 ```bash
+cd $INSTALLPATH
 git clone git@bitbucket.org:andrewpeterson/brown-gpaw.git
 #git clone https://bitbucket.org/andrewpeterson/brown-gpaw.git
 ```
