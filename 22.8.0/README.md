@@ -34,7 +34,7 @@ This approach shouldn't put hidden files all over your system, so you should be 
 Let's first create that directory; you can place it somewhere else if you choose by modifying `$INSTALLPATH`:
 
 ```bash
-INSTALLPATH=$HOME/installs  # Feel free to re-name.
+INSTALLPATH=$HOME/installs  # Feel free to re-name; must be absolute path.
 mkdir -p $INSTALLPATH
 cd $INSTALLPATH
 ```
