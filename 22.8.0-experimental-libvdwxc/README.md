@@ -1,6 +1,9 @@
 Installation instructions
 =========================
 
+These notes are an attempt to install with libvdwxc.
+It doesn't seem two work right; we should probably delete them, but leaving them for now in case we need them to figure it out.
+
 CCV module version
 ------------------
 
@@ -24,81 +27,56 @@ You can submit GPAW jobs with `gpaw-submit` and `gpaw-debug-submit`.
 Custom installation
 -------------------
 
+(These instructions have now been updated to include the libvdwxc library, which allows you to use BEEF-vdw.)
+
 If you'd like to install your own version of GPAW 22.8.0 or the latest development version; for example to use or test new features, or better to have your own copy to hack on, these instructions should work.
 You should also have a look at the official instructions on the [GPAW website](https://wiki.fysik.dtu.dk/gpaw/devel/developer_installation.html).
 
 Here, we'll create everything in a standalone environment, such that when you want to use gpaw later you can do so by calling the command `loadgpawdeveloper`.
 This approach shouldn't put hidden files all over your system, so you should be able to un-install later, if you choose, by just removing the directory with all of the GPAW files.
-
-Aside: If you need ASE
-----------------------
-
-We'll assume you already have ASE installed, which is located at `$HOME/usr/installs/ase`.
-(If you want to be careful, your ASE version should be ASE-3.22.1 to match GPAW version 22.8.0. If you are using the development branch of GPAW, then you probably want the development version of ASE.)
-
-If you don't yet have ASE installed, you can do something like below, which will give you a standalone version of ASE that you can use without GPAW.
-If you only ever plan to use ASE with GPAW, you can skip the parts below the indicated lines, as these dependencies will also be installed for GPAW.
+Let's first create that directory; you can place it somewhere else if you choose by modifying `$INSTALLPATH`:
 
 ```bash
-ASEPATH=$HOME/usr/installs/ase
-mkdir -p $ASEPATH
-cd $ASEPATH
-git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
-#git clone https://gitlab.com/ase/ase.git  # for development version
-# You can skip below if you won't ever use ASE without GPAW.
-module load python/3.9.0
-python3 -m venv ase-venv
-source $ASEPATH/ase-venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install numpy
-python3 -m pip install scipy
-python3 -m pip install matplotlib
+INSTALLPATH=$HOME/installs/gpaw-22.8  # Feel free to re-name; must be absolute path.
+mkdir -p $INSTALLPATH
+cd $INSTALLPATH
 ```
 
-If you want to be able to use ASE without GPAW, create a command to load ASE in your .bashrc.
-Edit `.bashrc` to contain the function
-
-```bash
-loadase(){
-ASEPATH=$HOME/usr/installs/ase
-export PYTHONPATH=$PYTHONPATH:$ASEPATH/ase
-export PATH=$PATH:$ASEPATH/ase/bin
-module load python/3.9.0
-source $ASEPATH/ase-venv/bin/activate
-complete -o default -C "$ASEPATH/ase-venv/bin/python3 $ASEPATH/ase/cli/complete.py" ase
-}
-```
-
-And when you want to load ASE (without GPAW) in the future, you just type `loadase` at the command line.
-When you want ASE+GPAW, you'll be typing `loadgpaw`, as described below.
-
-Before returning to the GPAW install, deactivate the ASE virtual environment with the below command.
-(Or log out, then back in.)
-
-```bash
-deactivate
-```
-
-Back to GPAW install
---------------------
-
-These instructions are based off of how Paul Hall installed `gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20` on the CCV in June 2021.
-Note that these instructions use the environment variables (mpi, etc.) created for 21.1.0, which seem to work fine with 22.8.0.
-
-First load the necessary modules:
+Next we'll load all the modules that we'll need for this installation:
 
 ```bash
 module load mpi/openmpi_4.0.7_gcc_10.2_slurm22 gcc/10.2 intel/2020.2 python/3.9.0
+
+export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
+export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
+export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
 ```
 
-I'll assume you are installing GPAW in `~/usr/installs`.
-You will create a python virtual environment (`venv`) within that directory and install the needed python packages.
-(Note that whatever you pick for `GPAWPATH` needs to be the *permanent* installation location; you can't easily move it later.)
+Now, install libvdwxc, which will give us the BEEF-vdw functional:
+
 
 ```bash
-GPAWPATH=$HOME/usr/installs/gpaw
-mkdir -p $GPAWPATH
-cd $GPAWPATH
+mkdir -p $INSTALLPATH/libvdwxc-source
+cd $INSTALLPATH/libvdwxc-source
+wget https://launchpad.net/libvdwxc/stable/0.4.0/+download/libvdwxc-0.4.0.tar.gz
+tar -xzvf libvdwxc-0.4.0.tar.gz
+rm libvdwxc-0.4.0.tar.gz
+cd libvdwxc-0.4.0
+mkdir local-build
+cd local-build
+../configure --with-mpi --prefix="$INSTALLPATH/libvdwxc"
+make -j4   # Run make using 4 processors
+make check
+make install
+```
+
+We'll create a virtual environment that contains all the python dependencies.
+We'll re-load this virtual environment every time we want to run a GPAW job with this version.
+
+
+```bash
+cd $INSTALLPATH
 python3 -m venv gpaw-venv
 source gpaw-venv/bin/activate
 python3 -m pip install --upgrade pip
@@ -114,27 +92,18 @@ python3 -m pip install sphinx  # for documentation building
 python3 -m pip install sphinx-rtd-theme  # for documentation building
 ```
 
-Paul installed the tricky things we need, FFTW and libxc for us, and we can pick those up by setting the environment variables as below.
-Note that there is a bug in libxc version 5.0.0, so this uses a 4.x version.
-For archival purposes, the contents of these four directories can be found in this repository (20.1.0/ccv-files).
+Here we'll assume you don't have ASE already installed; if you have another version you'd prefer to use you should be able to just point `ASEPATH` to that directory and skip the git step.
+Download and link ASE:
 
 ```bash
-export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
-export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
-export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
-```
-
-Add ASE to your python path, if it's not there already.
-This assumes you already have ASE installed at `$HOME/usr/installs/ase`.
-(As noted above, the "correct" version of ASE for this version of GPAW is ASE-3.21.1, but this is usually quite forgiving.)
-
-```bash
-ASEPATH=$HOME/usr/installs/ase
+ASEPATH=$INSTALLPATH/ase
+mkdir -p $ASEPATH
+cd $ASEPATH
+git clone -b 3.22.1 https://gitlab.com/ase/ase.git  # for version 3.22.1
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
+complete -o default -C "$INSTALLPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 ```
 
 We've stored the configuration files and submission scripts that are unique to Brown in the "brown-gpaw" repository.
@@ -142,6 +111,7 @@ We've stored the configuration files and submission scripts that are unique to B
 Clone this so you can get these files, using one of the two modes below.
 
 ```bash
+cd $INSTALLPATH
 git clone git@bitbucket.org:andrewpeterson/brown-gpaw.git
 #git clone https://bitbucket.org/andrewpeterson/brown-gpaw.git
 ```
@@ -162,6 +132,10 @@ cd gpaw
 cp ../../brown-gpaw/22.8.0/siteconfig.py .
 ```
 
+*Important:* if you have installed somewhere other than what we suggest here, you will need to update the libvdwxc portion of siteconfig.py to correctly point to your libvdwxc installation before proceeding.
+See line 112.
+(That is, make it match $INSTALLPATH.)
+
 Cross your fingers, and install with
 
 ```bash
@@ -173,7 +147,7 @@ python3 -m pip install --editable .
 Check that the installation exists, install the PAW setups, and test:
 
 ```bash
-cd $GPAWPATH
+cd $INSTALLPATH
 gpaw info  # Checks where stuff is installed.
 gpaw install-data .  # Installs the setups. Probably say 'y' to register the path.
 gpaw info  # Make sure the new setup directory shows up.
@@ -197,20 +171,20 @@ Add the following to your `.bashrc` (making sure your ASE path is right):
 
 ```bash
 loadgpawdeveloper(){
-ASEPATH=/path/to/my/ase
-GPAWPATH=$HOME/usr/installs/gpaw
+INSTALLPATH=$HOME/installs/gpaw-22.8  # Update if necessary.
+ASEPATH=$INSTALLPATH/ase
 module load mpi/openmpi_4.0.7_gcc_10.2_slurm22 gcc/10.2 intel/2020.2 python/3.9.0
-source $GPAWPATH/gpaw-venv/bin/activate
+source $INSTALLPATH/gpaw-venv/bin/activate
 export PATH="$ASEPATH/tools:$PATH"
 export PATH="$ASEPATH/bin:$PATH"
 export PYTHONPATH="$ASEPATH/ase:$PYTHONPATH"
-complete -o default -C "$GPAWPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
+complete -o default -C "$INSTALLPATH/gpaw-venv/bin/python3 $ASEPATH/ase/ase/cli/complete.py" ase
 export C_INCLUDE_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/include:$C_INCLUDE_PATH
 export LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/lib:$LD_LIBRARY_PATH
 export PATH=/gpfs/runtime/opt/gpaw/21.1.0_openmpi_4.0.5_gcc_10.2_slurm20/depends/bin:$PATH
 # Uncomment the next line if you chose not to register your setups.
-#export GPAW_SETUP_PATH=$GPAWPATH/gpaw-setups-0.9.20000
+export GPAW_SETUP_PATH=$INSTALLPATH/gpaw-setups-0.9.20000
 }
 ```
 
@@ -218,8 +192,8 @@ You will also need submit files that you use to submit your python scripts.
 You can copy them into your bin directory as
 
 ```bash
-cp $GPAWPATH/brown-gpaw/22.8.0/gpaw-debug-submit $GPAWPATH/gpaw-venv/bin/gpaw-debug-submit
-cp $GPAWPATH/brown-gpaw/22.8.0/gpaw-submit $GPAWPATH/gpaw-venv/bin/gpaw-submit
+cp $INSTALLPATH/brown-gpaw/22.8.0/gpaw-debug-submit $INSTALLPATH/gpaw-venv/bin/
+cp $INSTALLPATH/brown-gpaw/22.8.0/gpaw-submit $INSTALLPATH/gpaw-venv/bin/
 ```
 
 Then you should be able to submit jobs as normal, like
