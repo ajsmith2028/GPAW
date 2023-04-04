@@ -107,7 +107,7 @@ if 0:
 
 
 # libvdwxc:
-if 1:
+if 0:
     libvdwxc = True
     path = '$HOME/installs/gpaw-22.8/libvdwxc'
     extra_link_args += ['-Wl,-rpath=%s/lib' % path]
